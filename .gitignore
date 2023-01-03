@@ -1,9 +1,14 @@
-# Prerequisites
-*.d
+# Build Directory
+build/
+
+# Emacs stuff
+.#*
+*~
+
+#ImGui stuff
+imgui.ini
 
 # Compiled Object files
-*.slo
-*.lo
 *.o
 *.obj
 
@@ -16,13 +21,7 @@
 *.dylib
 *.dll
 
-# Fortran module files
-*.mod
-*.smod
-
 # Compiled Static libraries
-*.lai
-*.la
 *.a
 *.lib
 

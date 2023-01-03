@@ -1,0 +1,90 @@
+cmake_minimum_required(VERSION 3.0.0)
+
+project(GFX_2D)
+
+set(CMAKE_CXX_STANDARD 20)
+
+set(SRC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
+set(INC_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
+set(LIB_DIR ${CMAKE_CURRENT_SOURCE_DIR}/lib)
+set(BIN_DIR ${CMAKE_CURRENT_SOURCE_DIR}/bin)
+
+set(CMAKE_BINARY_DIR ${BIN_DIR})
+
+set(GLAD_DIR ${LIB_DIR}/glad)
+set(GLFW_DIR ${LIB_DIR}/glfw)
+set(GLM_DIR ${LIB_DIR}/glm/glm)
+set(IMGUI_DIR ${LIB_DIR}/imgui)
+set(STB_DIR ${LIB_DIR}/stb)
+
+# main
+set(MAIN_SRC
+    ${SRC_DIR}/main.cpp
+    ${SRC_DIR}/stb_impls.cpp
+)
+
+add_executable(main ${MAIN_SRC})
+
+target_include_directories(main PUBLIC
+	${INC_DIR}
+    ${GLFW_DIR}/include
+    ${GLM_DIR}
+    ${GLAD_DIR}/include
+	${IMGUI_DIR}
+	${STB_DIR}
+)
+
+# GLFW
+set(GLFW_BUILD_DOCS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(GLFW_BUILD_EXAMPLES OFF CACHE BOOL "" FORCE)
+
+add_subdirectory(${GLFW_DIR})
+
+# Glad
+set(GLAD_SRC
+    ${GLAD_DIR}/src/glad.c
+)
+
+add_library(glad_lib ${GLAD_SRC})
+
+target_include_directories(glad_lib
+    PRIVATE ${GLAD_DIR}/include
+)
+
+
+# imgui
+set(IMGUI_BACKEND_SRC
+    ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
+    ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
+)
+
+add_library(imgui_backend_lib ${IMGUI_BACKEND_SRC})
+
+target_include_directories(imgui_backend_lib PUBLIC
+    ${IMGUI_DIR}
+	${GLFW_DIR}/include
+)
+
+file(GLOB IMGUI_SRC
+    ${IMGUI_DIR}/*.hpp
+    ${IMGUI_DIR}/*.cpp
+)
+
+add_library(imgui_lib ${IMGUI_SRC})
+
+#target_compile_definitions(imgui_lib PUBLIC
+#    IMGUI_USER_CONFIG="ImGuiUserConfig.h"
+#)
+
+target_include_directories(imgui_lib PUBLIC 
+    ${IMGUI_DIR}
+)
+
+
+target_link_libraries(main
+    glad_lib
+	glfw
+	imgui_lib
+	imgui_backend_lib
+)
