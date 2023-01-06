@@ -12,11 +12,13 @@ public:
 		paint_color{paint_color}
 	{}
 
-	void fill_pixel(i32 x, i32 y) {
+	void fill_pixel(i32 x, i32 y, u8 alpha = 0) {
         assert(x >= 0 && x < bitmap.width);
         assert(y >= 0 && y < bitmap.height);
 
-	    bitmap.data[y * bitmap.width + x] = paint_color;
+		Color color = paint_color;
+		color.a = alpha;
+	    bitmap.data[y * bitmap.width + x] = color;
 	}
 
 	Bitmap& bitmap;
